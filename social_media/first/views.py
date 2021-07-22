@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+# this class contains data format as a class that would be serialized
+# if we have to save the data we can use models instead
 from first.data import dat
 from first.serial import data_serializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import io
 # Create your views here.
-
+#you can name your views here with genric functionality like form view
+# or login view add delete view with all get post type requests
 class data_view(APIView):
     def get(self,requests):
         data_obj=dat('satvik','mastergoyal2001@gmail.com',19)
