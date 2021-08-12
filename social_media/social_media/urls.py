@@ -17,9 +17,10 @@ from first.views import reg
 from django.contrib import admin
 from django.urls import path,include
 from first import views
-
+from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/data',views.data_view.as_view()),
-    path('api/registration',views.reg.as_view())
+    path('api/registration',views.reg.as_view()),
+    path('api/login',obtain_auth_token,name="login")
 ]

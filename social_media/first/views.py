@@ -8,6 +8,11 @@ from first.serial import data_serializer,account_serializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import io
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+#token table  with foreign key relationship to the users table
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 #you can name your views here with genric functionality like form view
@@ -29,7 +34,7 @@ class data_view(APIView):
             print(JSONRenderer().render(data=ser_data.data))
         print('recieved')
         return(Response('fuck yu'))
-
+# registration class contains all functions related to user registration
 class reg(APIView):
     def get(self,requests):
         pass
@@ -43,7 +48,36 @@ class reg(APIView):
             
             data['email']=acc.email
             data['username']=acc.username
+            token=Token.objects.get(user=acc).key
+            data['token']=token
         
         else:
             data=serializer.errors
         return Response(data)
+
+#authentication class contains all the functions related to authentication
+#  class authentication_class(APIView):
+#     authentication_classes = [SessionAuthentication, BasicAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, format=None):
+#         content = {
+#             'user': str(request.user),  # `django.contrib.auth.User` instance.
+#             'auth': str(request.auth),  # None
+#         }
+#         return Response(content)
+
+#save method will signal this function to make toke for the registered user
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        c=Token.objects.create(user=instance)
+        print(c)
+
+#steps for authentication
+#1 database table for token foreign key relationship with account table
+#url=api/account/login
+#genrate a token 
+#put it inot the token table
+# once they have that they would attach in the header of the request
+#then their will be functions to check weather the token is right or not
