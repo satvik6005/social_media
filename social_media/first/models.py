@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser , BaseUserManager
 
 class usermanager(BaseUserManager):
+    #contains all the operations related functions on th account class
     def create_user(self,email,username,password=None):
         if not email:
             raise ValueError("Users must have an email adress")
@@ -11,10 +12,11 @@ class usermanager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-    def create_superuser(self,email,usenrame,password=None):
-        user=self.create_user(email,password=password,username=usenrame)
+    def create_superuser(self,email,username,password=None):
+        user=self.create_user(email,password=password,username=username)
         user.is_admin=True
-        user.save(using=self.__db)
+        user.is_staff=True
+        user.save(using=self._db)
         return user
 
 
@@ -29,6 +31,7 @@ class account(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     is_admin=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
+    is_staff=models.BooleanField(default=False)
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']
     objects=usermanager()

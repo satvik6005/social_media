@@ -26,6 +26,8 @@ SECRET_KEY = 'django-insecure-*9_&+sy%x!je%f-6u-d#&*55a*8xn691gl$z=&z#q-3=lxs-+m
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'first.account'
+
 
 
 # Application definition

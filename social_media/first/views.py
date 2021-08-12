@@ -4,10 +4,11 @@ from rest_framework.response import Response
 # this class contains data format as a class that would be serialized
 # if we have to save the data we can use models instead
 from first.data import dat
-from first.serial import data_serializer
+from first.serial import data_serializer,account_serializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import io
+
 # Create your views here.
 #you can name your views here with genric functionality like form view
 # or login view add delete view with all get post type requests
@@ -28,3 +29,21 @@ class data_view(APIView):
             print(JSONRenderer().render(data=ser_data.data))
         print('recieved')
         return(Response('fuck yu'))
+
+class reg(APIView):
+    def get(self,requests):
+        pass
+        
+    def post(self,requests):
+        serializer=account_serializer(data=requests.data)
+        data={}
+        if serializer.is_valid():
+            
+            acc=serializer.save()
+            
+            data['email']=acc.email
+            data['username']=acc.username
+        
+        else:
+            data=serializer.errors
+        return Response(data)
